@@ -12,7 +12,24 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    # Secuencia de pasos que se realizarán sobre el ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Docker login
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      # Este es el comando que vamos a ejecutar, si ponemos un pipe indica que las siguientes líneas que vengan a continuación serán líneas independientes.
+      # Lo primero que hacemos es loguearnos en docker hub desde línea de comandos para poder subir las imágenes y desplegarlas en docker hub y tener permiso.
+      run: |
+        echo "Iniciando login"
+        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+        echo "Fin del login"
+
+
+
+    # - name: Build the Docker image
+    #   run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
