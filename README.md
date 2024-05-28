@@ -61,8 +61,19 @@ docker container run -p 3000:3000 iiglesias91/docker-graphql:0.0.1
 # Para comprobarlo nos vamos a http://localhost:3000/graphql
 ~~~
 
+9. Para hacer el versionamiento semántico del commit que se suba al master utilizaremos [Git Semantic Version](https://github.com/marketplace/actions/git-semantic-version?version=v4.0.3)
 
+~~~
+- name: Git Semantic Version
+  uses: PaulHatch/semantic-version@v4.0.3
+  with:
+    major_pattern: "major:"
+    minor_pattern: "feature:"
+    format: "${major}.${minor}.${patch}-prerelease${increment}"
+  id: version
+~~~
 
+Una vez configurado, cada vez que se sube un commit se incrementa el número del prerelease. Si en el comentario del commit lo comenzamos por "major:" o "feature:" entonces automáticamente se aumentará el número de la versión correspondiente.
 
 
 
