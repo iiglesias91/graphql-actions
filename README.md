@@ -82,7 +82,6 @@ Una vez configurado, cada vez que se sube un commit se incrementa el número del
 
 
 
-
 # A partir de aquí es el README.md original del proyecto
 
 <p align="center">
