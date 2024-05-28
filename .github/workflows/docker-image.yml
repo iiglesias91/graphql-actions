@@ -32,8 +32,6 @@ jobs:
       env:
         DOCKER_USER: ${{ secrets.DOCKER_USER }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        # Variable de entorno que hace referencia al paso anterior. Cama "name:" es un "step"
-        NEW_VERSION: ${{ steps.version.outputs.version }}
       # Este es el comando que vamos a ejecutar, si ponemos un pipe indica que las siguientes líneas que vengan a continuación serán líneas independientes.
       # Lo primero que hacemos es loguearnos en docker hub desde línea de comandos para poder subir las imágenes y desplegarlas en docker hub y tener permiso.
       run: |
@@ -42,15 +40,20 @@ jobs:
         echo "Fin del login"
         echo "New version: $NEW_VERSION!!!"
 
-    # - name: Build Docker image
-    #   run: |
-    #     docker build -t iiglesias91/docker-graphql:0.0.2 .
-    #     docker build -t iiglesias91/docker-graphql:latest .
+    - name: Build Docker image
+      env:
+        # Variable de entorno que hace referencia al paso anterior. Cama "name:" es un "step"
+        NEW_VERSION: ${{ steps.version.outputs.version }}
+      run: |
+        docker build -t iiglesias91/docker-graphql:$NEW_VERSION .
+        docker build -t iiglesias91/docker-graphql:latest .
 
-    # - name: Push Docker image
-    #   run: |
-    #     docker push iiglesias91/docker-graphql:0.0.2
-    #     docker push iiglesias91/docker-graphql:latest
+    - name: Push Docker image
+      env:
+        NEW_VERSION: ${{ steps.version.outputs.version }}
+      run: |
+        docker push iiglesias91/docker-graphql:$NEW_VERSION
+        docker push iiglesias91/docker-graphql:latest
 
     # - name: Build the Docker image
     #   run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
